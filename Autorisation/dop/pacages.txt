@@ -1,0 +1,9 @@
+﻿Install-Package Microsoft.EntityFrameworkCore
+Install-Package Microsoft.EntityFrameworkCore.SqlServer
+Install-Package Microsoft.EntityFrameworkCore.Tools
+Install-Package Microsoft.Extensions.Configuration.Json
+Install-Package ClosedXML
+Install-Package MaterialDesignThemes
+
+
+сторка подключения находится в файле "appsettings.json"
