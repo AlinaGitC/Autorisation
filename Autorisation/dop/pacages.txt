@@ -6,4 +6,4 @@ Install-Package ClosedXML
 Install-Package MaterialDesignThemes
 
 
-сторка подключения находится в файле "appsettings.json"
+сторка подключения находится в файле "appsettings.json" 
