@@ -26,7 +26,7 @@ namespace Autorisation.Models
 
         public static void SetBlockTime(DateTime blockTime)
         {
-            File.WriteAllText(BlockFilePath, blockTime.ToString("o")); // ISO 8601 format
+            File.WriteAllText(BlockFilePath, blockTime.ToString("o"));
         }
 
         public static void ClearBlockTime()
