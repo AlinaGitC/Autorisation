@@ -10,7 +10,17 @@ namespace Autorisation
     /// </summary>
     public partial class App : Application
     {
-       
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            var blockTime = BlockState.GetBlockTime();
+            if (blockTime.HasValue && blockTime.Value <= DateTime.Now)
+            {
+                BlockState.ClearBlockTime();
+            }
+
+        }
     }
 
 }

@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Autorisation
 {
@@ -23,9 +24,53 @@ namespace Autorisation
     {
         private int _attempts = 0;
         private DateTime? _blockedUntil = null;
+        private DispatcherTimer _timer;
         public LoginWindow()
         {
             InitializeComponent();
+
+            _blockedUntil = BlockState.GetBlockTime();
+
+            if (_blockedUntil.HasValue && _blockedUntil > DateTime.Now)
+            {
+                StartBlockTimer();
+            }
+        }
+        private void StartBlockTimer()
+        {
+            BlockTimerText.Visibility = Visibility.Visible;
+            txtLogin.IsEnabled = false;
+            txtPassword.IsEnabled = false;
+
+            _timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            _timer.Tick += UpdateBlockTimer;
+            _timer.Start();
+        }
+
+        private void UpdateBlockTimer(object sender, EventArgs e)
+        {
+            if (_blockedUntil.HasValue)
+            {
+                var timeLeft = _blockedUntil.Value - DateTime.Now;
+
+                if (timeLeft.TotalSeconds > 0)
+                {
+                    BlockTimerText.Text = $"Система заблокирована. До разблокировки: {timeLeft:mm\\:ss}";
+                }
+                else
+                {
+                    // Разблокировка
+                    _timer.Stop();
+                    BlockTimerText.Visibility = Visibility.Collapsed;
+                    txtLogin.IsEnabled = true;
+                    txtPassword.IsEnabled = true;
+                    _blockedUntil = null;
+                    BlockState.ClearBlockTime();
+                }
+            }
         }
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
@@ -41,7 +86,8 @@ namespace Autorisation
                 return;
             }
 
-           
+            try
+            {
                 using (var context = new AppDbContext())
                 {
                     var user = await context.Userr
@@ -60,7 +106,9 @@ namespace Autorisation
                         _attempts++;
                         if (_attempts >= 3)
                         {
-                            _blockedUntil = DateTime.Now.AddMinutes(0.25);
+                            _blockedUntil = DateTime.Now.AddSeconds(20);
+                            BlockState.SetBlockTime(_blockedUntil.Value);
+                            StartBlockTimer();
                             MessageBox.Show("Превышено количество попыток. Система заблокирована на 1 минуту.");
                         }
                         else
@@ -69,7 +117,17 @@ namespace Autorisation
                         }
                     }
                 }
-            
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}");
+            }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            _timer?.Stop();
         }
     }
 }

@@ -27,6 +27,7 @@ namespace Autorisation
         private ObservableCollection<Driver> _drivers;
         private DateTime _lastActivityTime;
         private DispatcherTimer _inactivityTimer;
+        private DispatcherTimer _saveTimer;
         public MainWindow()
         {
             InitializeComponent();
@@ -36,11 +37,18 @@ namespace Autorisation
             // Настройка таймера неактивности
             _inactivityTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMinutes(1)
+                Interval = TimeSpan.FromSeconds(10)
             };
             _inactivityTimer.Tick += InactivityTimer_Tick;
             _inactivityTimer.Start();
-
+            // Таймер для сохранения времени активности (каждую секунду)
+            /*_saveTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            _saveTimer.Tick += SaveActivityTime;
+            _saveTimer.Start();
+            */
             LoadDrivers();
         }
         private async void LoadDrivers()
@@ -62,7 +70,7 @@ namespace Autorisation
 
         private void InactivityTimer_Tick(object sender, EventArgs e)
         {
-            if ((DateTime.Now - _lastActivityTime).TotalMinutes >= 1)
+            if ((DateTime.Now - _lastActivityTime).TotalSeconds >= 3)
             {
                 _inactivityTimer.Stop();
                 MessageBox.Show("Сеанс завершен из-за неактивности");
