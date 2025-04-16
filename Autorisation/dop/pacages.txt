@@ -6,4 +6,34 @@ Install-Package ClosedXML
 Install-Package MaterialDesignThemes
 
 
-сторка подключения находится в файле "appsettings.json" 
+--- сторка подключения находится в файле "appsettings.json" 
+
+--- sql-запрос для поиска строк с пустыми значениями:
+		select * 
+		from Driver
+		where FirstName IS NULL OR FirstName = ''
+		OR LastName IS NULL OR LastName = ''
+		OR MiddleName IS NULL OR MiddleName = ''
+		OR PassportSerial IS NULL OR PassportSerial = ''
+		OR PassportNumber IS NULL OR PassportNumber = ''
+		OR PostCode IS NULL OR PostCode = ''
+		OR [Address] IS NULL OR [Address] = ''
+		OR AddressLife IS NULL OR AddressLife = ''
+		OR Company IS NULL OR Company = ''
+		OR JobName IS NULL OR JobName = ''
+		OR Phone IS NULL OR Phone = ''
+		OR Email IS NULL OR Email = ''
+		OR PhotoDescription IS NULL OR PhotoDescription = ''
+		OR LicenceDate IS NULL OR LicenceDate = ''
+		OR [ExpireDate] IS NULL OR [ExpireDate] = ''
+		OR Categories IS NULL OR Categories = ''
+		OR LicenceSeries IS NULL OR LicenceSeries = ''
+		OR LicenceNumber IS NULL OR LicenceNumber = ''
+		OR VIN IS NULL OR VIN = ''
+		OR Manufacturer IS NULL OR Manufacturer = ''
+		OR Model IS NULL OR Model = ''
+		OR [Year] IS NULL OR [Year] = ''
+		OR [Weight] IS NULL OR [Weight]= ''
+		OR Color IS NULL OR Color = ''
+		OR EngineType IS NULL OR EngineType = ''
+		OR TypeDrive IS NULL OR TypeDrive = '';
